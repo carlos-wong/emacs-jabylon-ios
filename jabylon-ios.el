@@ -40,4 +40,20 @@
                               (format "%c" char)))
                           string)) :initial-value 0))
 
+(defun jabylon-ios-fix-zh ()
+  "docstring"
+  (interactive)
+  (let* ((buffer-content (buffer-string))
+         (splited-buffer-content (split-string buffer-content ";"))
+         (converted-content (format "%s" (mapconcat (lambda (string)
+                 (let* ((debug-str string))
+                   (mapconcat (lambda (string)
+                                (if (equal (string-match-p "\\\\u...." string ) 0)
+                                    (format "%c" (carlos/jayblon/convertCodePoint string))
+                                  string))
+                              (carlos/split-string debug-str "\\\\u...." t t) "")))
+                                                    splited-buffer-content ""))))
+    (erase-buffer)
+    (insert converted-content)))
+
 (provide 'jabylon-ios)
